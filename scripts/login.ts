@@ -1,4 +1,5 @@
 // Name: Login Trigger
+// Exclude: true
 // Author: Eduard Uffelmann
 // Twitter: @schmedu_
 // System: unlock-screen

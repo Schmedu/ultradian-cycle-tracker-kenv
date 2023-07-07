@@ -1,5 +1,6 @@
 // Name: Ultradian Cycle Tracker
 // Schedule: */1 * * * *
+// Exclude: true
 // Author: Eduard Uffelmann
 // Twitter: @schmedu_
 
