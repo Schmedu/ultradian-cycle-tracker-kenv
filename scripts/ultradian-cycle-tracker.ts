@@ -1,19 +1,11 @@
 // Name: Ultradian Cycle Tracker
-// Schedule: */1 * * * *
+/// Schedule: */1 * * * *
 // Exclude: true
 // Author: Eduard Uffelmann
 // Twitter: @schmedu_
 
 import "@johnlindquist/kit";
-export async function getSystemInfoDb() {
-    // @ts-ignore
-    let database = await db("system-info", {
-        lastLogin: new Date().toString(),
-        lastLogout: undefined,
-        dates: {},
-    });
-    return database;
-}
+import { getSystemInfoDb } from "../lib/system"; // NOT WORKING CORRECTLY, THE SYSTEM TRIGGERS ARE NOT WORKING IN A KENV
 
 const TIME_LIMIT = 90;
 const INTERVAL_TIME = 5;
@@ -31,6 +23,8 @@ let timeSinceLastLoginInMinutes = parseInt(
     (timeSinceLastLogin / 1000 / 60).toFixed(0)
 );
 
+await menu(`${timeSinceLastLoginInMinutes}m`); // update the time in the menu bar
+
 if (process.env.KIT_TRIGGER === "menu" || process.env.KIT_TRIGGER === "kar") {
     let currentDate = new Date().toISOString().slice(0, 10);
     let totalTime = database.dates[currentDate]?.totalTime || 0;
@@ -46,7 +40,7 @@ if (
     Number(timeSinceLastLoginInMinutes.toFixed(0)) % INTERVAL_TIME == 0 &&
     Date.parse(database.lastLogout) < lastLogin
 ) {
-    await notify({
+    notify({
         title: "Ultradian Cycle Tracker",
         message: `${timeSinceLastLoginInMinutes.toFixed(
             0

@@ -1,16 +1,14 @@
-// Name: Login Trigger
-// Exclude: true
+// Name: Shutdown Script
 // Author: Eduard Uffelmann
 // Twitter: @schmedu_
-/// System: unlock-screen
+/// System: shutdown
+// Exclude: true
 
 import "@johnlindquist/kit";
 import { getSystemInfoDb } from "../lib/system";
 
+// write to file
 let database = await getSystemInfoDb();
 
-database.lastLogin = new Date().toString();
+database.wasShutDown = true;
 await database.write();
-
-await menu("0m")
-

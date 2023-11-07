@@ -1,19 +1,11 @@
 // Name: Logout Trigger
 // Author: Eduard Uffelmann
 // Twitter: @schmedu_
-// System: lock-screen
+/// System: lock-screen
 
 import "@johnlindquist/kit";
 
-async function getSystemInfoDb() {
-    // @ts-ignore
-    let database = await db("system-info", {
-        lastLogin: new Date().toString(),
-        lastLogout: undefined,
-        dates: {},
-    });
-    return database;
-}
+import { getSystemInfoDb } from "../lib/system";
 
 let database = await getSystemInfoDb();
 
@@ -23,7 +15,7 @@ let now = new Date();
 let currentDate = now.toISOString().slice(0, 10);
 let lastLogin = new Date(database.lastLogin);
 
-let timeSinceLastLogin = (now.getTime() - lastLogin) / 1000 / 60;
+let timeSinceLastLogin = (now.getTime() - lastLogin.getTime()) / 1000 / 60;
 // parse date from loginTimeDate
 let loginTimeDate = lastLogin.toISOString().slice(0, 10);
 // check if loginTimeDate is today
@@ -37,9 +29,18 @@ if (loginTimeDate === currentDate) {
     }
 } else {
     // create new date from midnight of today
-    let midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+    let midnight = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        0,
+        0,
+        0,
+        0
+    );
     // get minutes from lastLogin to midnight
-    let minutesSinceLastLogin = (midnight.getTime() - lastLogin) / 1000 / 60;
+    let minutesSinceLastLogin =
+        (midnight.getTime() - lastLogin.getTime()) / 1000 / 60;
     if (database.dates[loginTimeDate] === undefined) {
         database.dates[loginTimeDate] = {
             totalTime: timeSinceLastLogin,
