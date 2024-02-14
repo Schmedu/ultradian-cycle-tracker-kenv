@@ -1,11 +1,27 @@
 // Name: Logout Trigger
+// Description: This script is triggered when the user logs out. Resets the timer for the current ultradian cycle.
+// Author: Eduard Uffelmann
+// System: lock-screen
+// Tags: ultradian-cycle-tracker, logout
 // Author: Eduard Uffelmann
 // Twitter: @schmedu_
-/// System: lock-screen
+// Linkedin: https://www.linkedin.com/in/euffelmann/
+// Website: https://schmedu.com
+// Group: Ultradian Cycle Tracker
 
 import "@johnlindquist/kit";
 
-import { getSystemInfoDb } from "../lib/system";
+async function getSystemInfoDb() {
+    let database = await db(await kenvPath("db", "system-info.json"), {
+        lastLogin: new Date().toString(),
+        lastLogout: void 0,
+        dates: {},
+        currentTasks: [],
+        wasShutDown: false,
+    });
+    return database;
+}
+
 
 let database = await getSystemInfoDb();
 
@@ -57,3 +73,4 @@ if (loginTimeDate === currentDate) {
 
 database.lastLogout = now.toString();
 await database.write();
+await menu("")

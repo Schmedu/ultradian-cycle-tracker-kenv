@@ -1,11 +1,25 @@
 // Name: Ultradian Cycle Tracker
-/// Schedule: */1 * * * *
-// Exclude: true
+// Description: This script tracks the time since the last login and notifies the user to take a break every 90 minutes.
+// Schedule: */1 * * * *
+// Tags: ultradian-cycle-tracker
 // Author: Eduard Uffelmann
 // Twitter: @schmedu_
+// Linkedin: https://www.linkedin.com/in/euffelmann/
+// Website: https://schmedu.com
+// Group: Ultradian Cycle Tracker
 
 import "@johnlindquist/kit";
-import { getSystemInfoDb } from "../lib/system"; // NOT WORKING CORRECTLY, THE SYSTEM TRIGGERS ARE NOT WORKING IN A KENV
+
+async function getSystemInfoDb() {
+    let database = await db(await kenvPath("db", "system-info.json"), {
+        lastLogin: new Date().toString(),
+        lastLogout: void 0,
+        dates: {},
+        currentTasks: [],
+        wasShutDown: false,
+    });
+    return database;
+}
 
 const TIME_LIMIT = 90;
 const INTERVAL_TIME = 5;
@@ -31,7 +45,9 @@ if (process.env.KIT_TRIGGER === "menu" || process.env.KIT_TRIGGER === "kar") {
     totalTime += timeSinceLastLoginInMinutes;
     notify({
         title: "Working Time",
-        message: `Total: ${(totalTime / 60).toFixed(1)}h`,
+        message: `Currently: ${timeSinceLastLoginInMinutes.toFixed(0)}m - Total: ${(totalTime / 60).toFixed(
+            1
+        )}h`,
     });
 }
 
